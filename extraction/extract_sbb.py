@@ -8,6 +8,15 @@ def get_sbb_data():
     print(df_data)
     df_data.to_csv("../data/sbb.csv")
 
+#sOA3DSfAJ2rm7S4CCWIKMq8Z46BdNnM3:zU8G0ngJqaGjMkYf
+payload = {'Authorization': 'Basic sOA3DSfAJ2rm7S4CCWIKMq8Z46BdNnM3:zU8G0ngJqaGjMkYf',
+           'Cache-Control': 'no-cache',
+           'Content-Length': '0',
+           'Postman-Token': '24264e32-2de0-f1e3-f3f8-eab014bb6d76'}
+
+response = rq.get("https://api.srgssr.ch/oauth/v1/accesstoken?grant_type=client_credentials", payload)
+print(response.json())
+
 
 
 

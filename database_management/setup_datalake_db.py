@@ -5,18 +5,12 @@ import pandas as pd
 # import logging -> create logs, really professional :)
 import os
 import dotenv as dot
+import database_management as db_mgmt
 
+# start connection to data lake
+metadata, engine = db_mgmt.connect_datalake()
 
-# load environment variables
-dot.load_dotenv()
-str_host = os.getenv('RDS_HOST')
-str_user = os.getenv('RDS_USERNAME')
-str_pw = os.getenv('RDS_PASSWORD')
-
-engine = create_engine('postgresql+pg8000://' + str_user + ':' + str_pw + '@' + str_host)
-
-connection = engine.connect()
-metadata = MetaData()
+#print(metadata)
 
 # municipal table
 # source: federal office of statistics
@@ -29,5 +23,15 @@ municipal = Table('municipal', metadata,
     Column('gdenamk', String(50))
 )
 
+weather = Table('weather_data', metadata,
+    Column('plz4', Integer, primary_key=True),
+    Column('plzz', String(60), nullable=False, key='name'),
+    Column('plznamk', Integer),
+    Column('ktkz', String(2)),
+    Column('gdenr', String(4)),
+    Column('gdenamk', String(50))
+)
+
 # checkfirst -> if tables exists or not
 municipal.create(engine, checkfirst=True)
+weather.create(engine, checkfirst=True)

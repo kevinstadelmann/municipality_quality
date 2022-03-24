@@ -18,5 +18,20 @@ metadata = db.MetaData()
 tbl_test = db.Table('test', metadata, autoload=True, autoload_with=engine)
 print(repr(metadata.tables['test']))
 
+#https://chartio.com/resources/tutorials/how-to-execute-raw-sql-in-sqlalchemy/
+
+
 #open questions: 6'000 anfragen pro tag über api möglich, aber dürfte auch 1x das ganze datenset als dataset runterladen...
 # 6k/tag wäre "dynamisch", abermühsam halt...
+
+
+with engine.connect() as con:
+
+    data = ( { "id": 1, "title": "The Hobbit", "primary_author": "Tolkien" },
+             { "id": 2, "title": "The Silmarillion", "primary_author": "Tolkien" },
+    )
+
+    statement = text("""INSERT INTO book(id, title, primary_author) VALUES(:id, :title, :primary_author)""")
+
+    for line in data:
+        con.execute(statement, **line)
