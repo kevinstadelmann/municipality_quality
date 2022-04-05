@@ -3,7 +3,7 @@ from datetime import datetime
 from airflow.models import DAG
 from airflow.operators.python import PythonOperator
 
-from load import load_to_s3
+from municipality_quality.load import load_to_s3
 
 def main_function(url: str, encoding: str, s3_bucket_name: str, path: str):
     # Dummy function
@@ -27,7 +27,7 @@ with DAG(
             'url': 'https://data.geo.admin.ch/ch.meteoschweiz.klima/nbcn-tageswerte/liste-download-nbcn-d.csv',
             'encoding': 'ISO-8859-1',
             's3_bucket_name': 'dataocean-datalake',
-            'path': '02_Wather_Station/weather_station_main_{}'.format(dt.datetime.now())\
+            'path': '02_Weather_Station/weather_station_main_{}'.format(dt.datetime.now())\
                         .replace(".", "_")\
                         .replace(":", "_")\
                         .replace(" ", "_")\
