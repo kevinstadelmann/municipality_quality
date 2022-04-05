@@ -1,9 +1,8 @@
 import logging
-import boto3
 
-from extraction import extract_from_source
+from municipality_quality.extraction import extract_from_source
 
-def upload_to_s3(url: str, encoding: str, s3_bucket_name: str, path: str) -> None:
+def upload_to_db(url: str, encoding: str, s3_bucket_name: str, path: str) -> None:
     # Function to upload files to S3
     f = extract_from_source.download_file(url, encoding)
     logging.info("Upload file start")
