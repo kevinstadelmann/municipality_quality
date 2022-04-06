@@ -100,7 +100,7 @@ load_weather_statistic = PythonOperator(
 load_municipality_zipcode = PythonOperator(
         task_id='04_load_municipality_zipcode',
         dag=dag,
-        python_callable=insert_log,
+        python_callable=main_function,
         op_kwargs={
             'url': 'https://data.geo.admin.ch/ch.meteoschweiz.klima/nbcn-tageswerte/liste-download-nbcn-d.csv',
             'encoding': 'ISO-8859-1',
@@ -119,7 +119,7 @@ load_municipality_zipcode = PythonOperator(
 load_municipality_statistic = PythonOperator(
         task_id='05_load_municipality_statistic',
         dag=dag,
-        python_callable=insert_log,
+        python_callable=main_function,
         op_kwargs={
             'url': 'https://data.geo.admin.ch/ch.meteoschweiz.klima/nbcn-tageswerte/liste-download-nbcn-d.csv',
             'encoding': 'ISO-8859-1',
@@ -138,7 +138,7 @@ load_municipality_statistic = PythonOperator(
 load_municipality_district = PythonOperator(
         task_id='06_load_municipality_district',
         dag=dag,
-        python_callable=insert_log,
+        python_callable=main_function,
         op_kwargs={
             'url': 'https://data.geo.admin.ch/ch.meteoschweiz.klima/nbcn-tageswerte/liste-download-nbcn-d.csv',
             'encoding': 'ISO-8859-1',
@@ -157,7 +157,7 @@ load_municipality_district = PythonOperator(
 load_municipality_location = PythonOperator(
         task_id='07_load_municipality_location',
         dag=dag,
-        python_callable=insert_log,
+        python_callable=main_function,
         op_kwargs={
             'url': 'https://data.geo.admin.ch/ch.meteoschweiz.klima/nbcn-tageswerte/liste-download-nbcn-d.csv',
             'encoding': 'ISO-8859-1',
