@@ -51,7 +51,7 @@ load_sbb_stop = PythonOperator(
             'airflow_connection_db':'aws_rds_postgres_dataocean',
             'table_name': 't_sbb_stop',
             'bucket_name_s3': 'dataocean-datalake',
-            'path': '01_SBB_stop/sbb_stop_{}'.format(dt.datetime.now())\
+            'path': '01_SBB_Stop/sbb_stop_{}'.format(dt.datetime.now())\
                         .replace(".", "_")\
                         .replace(":", "_")\
                         .replace(" ", "_")\
