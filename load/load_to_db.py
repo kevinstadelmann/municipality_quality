@@ -1,15 +1,19 @@
 import logging
+import sqlalchemy as db
+import pandas as pd
+from io import StringIO
+# from airflow.hooks.postgres_hook import PostgresHook
 
-from municipality_quality.extraction import extract_from_source
+from municipality_quality.database_management import database_management as db_mgmt
 
-def upload_to_db(url: str, encoding: str, s3_bucket_name: str, path: str) -> None:
-    # Function to upload files to S3
-    f = extract_from_source.download_file(url, encoding)
-    logging.info("Upload file start")
-    s3_resource = boto3.resource('s3',
-            aws_access_key_id='ASIAUTZK4H75FSCYXO6C',
-            aws_secret_access_key='BzQQxnAy48+yngezs2Mk6upOuMI0Q91Dh/DA9xXd',
-            aws_session_token='FwoGZXIvYXdzEA4aDKE4Bra+JEAZ+ip3iyK7ARVt5iXEj2N3+n0PUGvzLt7O0RQu9n+97QACkIvZKTUzB+/k7hw1mRmXHuNQYm3uM1XTfKJ80bHpEm2C6fm9Mxg6xrcBuLllA0jP4l/WSgXdIZ0nFEi2u7AJZgOJNgR3S50hnDe50VMsq4J5kHFLRaxZhhRzt3WT6OWfKQJVNBqzIxlF9pNIlmzcdGDGB4pmA2R9c9v7mHmvrmdP7sDMfnukQq1rbqlrGN4uOipiQLxLcvHs+H9vk5ZptGwo08qykgYyLWrlB+uK9I53DcIdSIP0OPYQC/mEqvbnTdDl0mDuC4w703pDkmGFzKJTXiVcUw=='
-        )
-    s3_resource.Object(s3_bucket_name, path).put(Body=f)
-    logging.info("Upload file end")
+def upload_to_db(data_stream, sep: str, airflow_connection_db: str, table_name: str) -> None:
+    # Function to upload files to db
+    logging.info("Upload to db start")
+    df = pd.read_csv(StringIO(data_stream), sep=sep)
+
+    metadata, engine = db_mgmt.connect_datalake(airflow_connection_db)
+    logging.info("Connection to db established")
+
+    df.to_sql(table_name, con=engine, if_exists='replace')
+
+    logging.info("Upload to db end")
