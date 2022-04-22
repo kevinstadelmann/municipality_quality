@@ -14,9 +14,11 @@ def connect_datalake(airflow_connection_db: str):
     str_host = connection.host
     str_user = connection.login
     str_pw = connection.password
+    str_db = connection.schema
     str_port = str(connection.port)
 
-    engine = db.create_engine('postgresql+pg8000://' + str_user + ':' + str_pw + '@' + str_host + ':' + str_port)
+    engine = db.create_engine('postgresql+pg8000://' + str_user + ':' + str_pw + '@' + str_host + ':' + str_port + '/' + str_db)
+    logging.info('postgresql+pg8000://' + str_user + ':' + str_pw + '@' + str_host + ':' + str_port + '/' + str_db)
     engine.dialect.description_encoding = None
     conn = engine.connect()
     metadata = db.MetaData()

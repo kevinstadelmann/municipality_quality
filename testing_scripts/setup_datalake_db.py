@@ -1,11 +1,7 @@
 # https://docs.sqlalchemy.org/en/14/core/metadata.html#creating-and-dropping-database-tables
-from sqlalchemy import *
-import pandas as pd
 #import pg8000
 # import logging -> create logs, really professional :)
-import os
-import dotenv as dot
-import database_management as db_mgmt
+import testing_scripts as db_mgmt
 
 # start connection to data lake
 metadata, engine = db_mgmt.connect_datalake()

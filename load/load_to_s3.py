@@ -4,8 +4,6 @@ from airflow.hooks.base import BaseHook
 
 def upload_to_s3(data_stream, airflow_connection_s3: str,bucket_name_s3: str, path: str) -> None:
     # Function to upload files to S3
-    logging.info("Upload file start")
-
     connection = BaseHook.get_connection(airflow_connection_s3)
     extra = connection.extra # This is a getter that returns the extra content of the Airflow connection.
     extra = eval(extra)
@@ -17,4 +15,3 @@ def upload_to_s3(data_stream, airflow_connection_s3: str,bucket_name_s3: str, pa
             aws_session_token=extra.get('aws_session_token')
         )
     s3_resource.Object(bucket_name_s3, path).put(Body=data_stream)
-    logging.info("Upload file end")

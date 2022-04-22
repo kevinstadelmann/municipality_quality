@@ -1,5 +1,5 @@
 # ignore data files, will be accessible in onedrive folder
 data
-
+testing_scripts
 # Environments
 .env
