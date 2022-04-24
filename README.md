@@ -14,11 +14,13 @@ technologies Apache Airflow and Amazon Web Services (AWS). Topic is about findin
 ### Structure
 airflow_dag: Python file for Apache Airflow setup
 
-database_management: Database Management classes for connection and log
+database_management: Database Management classes for connection and log (Python)
 
-extraction: Methods for extraction
+docker configuration: Docker configuration file
 
-load: Methods for loading of data
+extraction: Methods for extraction (Python)
+
+load: Methods for loading of data (Python)
 
 sql_scripts: Database scripts for setup of job and log tables (PostgreSQL)
 
@@ -27,7 +29,7 @@ requirements.txt: Required Python packages on Apache Airflow environment
 
 ### How to install
 Following steps are needed to set up the data pipelines:
-1.	Set up Apache Airflow (including install required packages -> requirements.txt)
+1.	Set up Apache Airflow with Docker (including install required packages -> requirements.txt)
 2.	Add all needed connection information in Apache Airflow
 	- AWS S3 connection
 	- AWS RDS Postgres connection
