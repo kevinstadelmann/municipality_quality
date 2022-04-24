@@ -1,7 +1,4 @@
-# The Optimal Municiplaity in Switzerland
-
-## Part 1 of 2
-
+# The Optimal Municipality in Switzerland
 
 ## Contributors: Kevin Stadelmann, Marc Weber, Patricia Wellhöfer
 
