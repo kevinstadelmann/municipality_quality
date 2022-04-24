@@ -1,5 +1,6 @@
 # ignore data files, will be accessible in onedrive folder
-data
-testing_scripts
+data/
+# ignore individual testing scripts
+testing_scripts/
 # Environments
 .env
