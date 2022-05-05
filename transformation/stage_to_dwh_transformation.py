@@ -7,7 +7,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 # SQLAlchemy connectable
-cnx = create_engine('sqlite:///contacts.db').connect()
+cnx = create_engine('postgresql+pg8000://').connect()
 
 # table named 'contacts' will be returned as a dataframe.
 df = pd.read_sql_table('contacts', cnx)
