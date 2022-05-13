@@ -207,8 +207,8 @@ FROM 	tmp_municipality_statistic
 CREATE TABLE IF NOT EXISTS dwh.t_weather_station(
 station_id VARCHAR(3) PRIMARY KEY,
 name VARCHAR(50),
-coordinatese INT,
-coordinatesn INT,
+e_cntr INT,
+n_cntr INT,
 latitude double precision,
 longitude double precision
 )
@@ -228,54 +228,63 @@ WHERE	station IS NOT NULL
 -- *****************************
 -- Table dwh.t_weather_statistic
 -- *****************************
+DROP TABLE dwh.t_weather_statistic;
 
 CREATE TABLE IF NOT EXISTS dwh.t_weather_statistic
 (
 statistic_id VARCHAR(15),
 station_id VARCHAR(3),
 date DATE,
-radiation_daily_avg_wsqm SMALLINT,
-snow_cm SMALLINT,
+radiation_daily_avg_wsqm DECIMAL(9,4),
+snow_cm DECIMAL(9,4),
+cloud_percent DECIMAL(9,4),
 air_pressure_hpa DECIMAL(5,1),
-rain_mm SMALLINT,
-sunshine_hours DECIMAL(5,1),
-air_temp_avg_celsius SMALLINT,
-air_temp_min_celsius SMALLINT,
-air_temp_max_celsius SMALLINT,
-air_temp_percent_celsius SMALLINT,
-humidity_avg_percent DECIMAL(5,4),
+rain_mm DECIMAL(9,4),
+sunshine_min DECIMAL(9,4),
+air_temp_avg_celsius DECIMAL(5,1),
+air_temp_min_celsius DECIMAL(5,1),
+air_temp_max_celsius DECIMAL(5,1),
+humidity_avg_percent DECIMAL(9,4),
+dwh_create_date timestamp with time zone NOT NULL DEFAULT now(),
+dwh_change_date timestamp with time zone NOT NULL DEFAULT now(),
+dwh_status VARCHAR(1) NOT NULL,
 CONSTRAINT fk_station_id
 	FOREIGN KEY(station_id)
         REFERENCES dwh.t_weather_station(station_id)
 )
 
--- *** INSERT *** ---
--- CREATE tmp Table
-CREATE TEMPORARY TABLE tmp_weather_statistic AS (
-SELECT	*
-FROM	stage.t_weather_statistic
-) WITH DATA
+/*
+    -- *** INSERT *** ---
+    -- CREATE tmp Table
+    CREATE TEMPORARY TABLE tmp_weather_statistic AS (
+    SELECT	*
+    FROM	stage.t_weather_statistic
+    ) WITH DATA
 
--- Update misbehaving columns
+    -- Update misbehaving columns
 
-UPDATE	tmp_weather_statistic
-SET		hto000d0 = CASE WHEN hto000d0 = '-' THEN NULL ELSE hto000d0 END,
-		rre150d0 = CASE WHEN rre150d0 = '-' THEN NULL ELSE rre150d0 END
+    UPDATE	tmp_weather_statistic
+    SET		hto000d0 = CASE WHEN hto000d0 = '-' THEN NULL ELSE hto000d0 END,
+            rre150d0 = CASE WHEN rre150d0 = '-' THEN NULL ELSE rre150d0 END
 
 
--- CAST and INSERT
-INSERT INTO dwh.t_weather_statistic
-SELECT 	CONCAT("station/location", to_date(date::text, 'YYYYMMDD')),
-		"station/location",
-		to_date(date::text, 'YYYYMMDD'),
-		CAST(gre000d0 as SMALLINT),
-		CAST(hto000d0 as SMALLINT),
-		CAST(prestad0 as DECIMAL(5,1)),
-		CAST(rre150d0 AS DECIMAL(5,1)),
-		CAST(sre000d0 as SMALLINT),
-		CAST(tre200d0 as SMALLINT),
-		CAST(tre200dn as SMALLINT),
-		CAST(tre200dx as SMALLINT),
-		CAST(ure200d0 as DECIMAL(5,2))
-FROM 	tmp_weather_statistic
+    -- CAST and INSERT
+    INSERT INTO dwh.t_weather_statistic
+    SELECT 	CONCAT("station/location", to_date(date::text, 'YYYYMMDD')),
+            "station/location",
+            to_date(date::text, 'YYYYMMDD'),
+            CAST(gre000d0 as SMALLINT),
+            CAST(hto000d0 as SMALLINT),
+            CAST(prestad0 as DECIMAL(5,1)),
+            CAST(rre150d0 AS DECIMAL(5,1)),
+            CAST(sre000d0 as SMALLINT),
+            CAST(tre200d0 as SMALLINT),
+            CAST(tre200dn as SMALLINT),
+            CAST(tre200dx as SMALLINT),
+            CAST(ure200d0 as DECIMAL(5,2)),
+            now(),
+            now(),
+            "A"
 
+    FROM 	tmp_weather_statistic
+*/

@@ -25,21 +25,18 @@ def main_function(airflow_connection_db, table_job_metadata):
             db_logger.write_log(row['job_id'], 0, 'Download file end')
         except:
             db_logger.write_log(row['job_id'], 99, 'Download file failed')
-            continue
         try:
             db_logger.write_log(row['job_id'], 0, 'Upload to s3 start')
             load_to_s3.upload_to_s3(data_stream, row['airflow_connection_s3'], row['aws_s3_bucket_name'], row['aws_s3_bucket_path'])
             db_logger.write_log(row['job_id'], 0, 'Upload to s3 end')
         except:
             db_logger.write_log(row['job_id'], 99, 'Upload to s3 failed')
-            continue
         try:
             db_logger.write_log(row['job_id'], 0, 'Upload to db start')
             load_to_db.upload_to_db(data_stream, row['file_sep'], row['airflow_connection_db'], row['table_name'], row['db_schema'], row['file_type'])
             db_logger.write_log(row['job_id'], 0, 'Upload to db end')
         except:
             db_logger.write_log(row['job_id'], 99, 'Upload to db failed')
-            continue
         db_logger.write_log(row['job_id'], 0, 'Job end')
 
 
