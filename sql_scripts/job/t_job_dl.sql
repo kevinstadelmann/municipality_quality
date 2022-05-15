@@ -1,8 +1,8 @@
--- Table: job.t_job
+-- Table: job.t_job_dl
 
-DROP TABLE IF EXISTS job.t_job;
+DROP TABLE IF EXISTS job.t_job_dl;
 
-CREATE TABLE IF NOT EXISTS job.t_job
+CREATE TABLE IF NOT EXISTS job.t_job_dl
 (
     job_id integer NOT NULL,
     job_name character varying(255),
@@ -24,16 +24,16 @@ CREATE TABLE IF NOT EXISTS job.t_job
     create_date timestamp with time zone NOT NULL DEFAULT now(),
     change_user character varying(255) NOT NULL DEFAULT current_user,
     change_date timestamp with time zone NOT NULL DEFAULT now(),
-    CONSTRAINT pk_t_job PRIMARY KEY (job_id)
+    CONSTRAINT pk_t_job_dl PRIMARY KEY (job_id)
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS job.t_job
+ALTER TABLE IF EXISTS job.t_job_dl
     OWNER to postgres;
 
 
-INSERT INTO job.t_job(
+INSERT INTO job.t_job_dl(
 	job_id, job_name, job_active, file_type
 	, file_url
 	, file_encoding, file_sep, file_tab, file_skiprows

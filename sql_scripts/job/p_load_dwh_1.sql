@@ -6,26 +6,27 @@ CREATE OR REPLACE PROCEDURE job.p_load_dwh_1(
 	IN ip_job_id integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
+DECLARE job_level varchar := 'dwh';
 BEGIN
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Job start');
+CALL job.p_log (job_level, ip_job_id, 0, 'Job start');
 
 -- CREATE tmp Table
 CREATE TEMPORARY TABLE tmp_weather_statistic AS (
 SELECT	CONCAT("station/location", to_date(date::text, 'YYYYMMDD'))         			"statistic_id",
 		"station/location"                                                 				"station_id",
 		to_date(date::text, 'YYYYMMDD')                                     			"date",
-		CAST((CASE WHEN gre000d0 = '-' THEN NULL ELSE gre000d0 END) AS DECIMAL(9,4))    "radiation_daily_avg_wsqm",
-		CAST((CASE WHEN hto000d0 = '-' THEN NULL ELSE hto000d0 END) AS DECIMAL(9,4))    "snow_cm",
-		CAST((CASE WHEN nto000d0 = '-' THEN NULL ELSE nto000d0 END) AS DECIMAL(9,4))    "cloud_percent",
-		CAST((CASE WHEN prestad0 = '-' THEN NULL ELSE prestad0 END) AS DECIMAL(5,1)) 	"air_pressure_hpa",
-		CAST((CASE WHEN rre150d0 = '-' THEN NULL ELSE rre150d0 END) AS DECIMAL(9,4)) 	"rain_mm",
-		CAST((CASE WHEN sre000d0 = '-' THEN NULL ELSE sre000d0 END) AS DECIMAL(9,4))     "sunshine_min",
-		CAST((CASE WHEN tre200d0 = '-' THEN NULL ELSE tre200d0 END) AS DECIMAL(5,1))    "air_temp_avg_celsius",
-		CAST((CASE WHEN tre200dn = '-' THEN NULL ELSE tre200dn END) AS DECIMAL(5,1))    "air_temp_min_celsius",
-		CAST((CASE WHEN tre200dx = '-' THEN NULL ELSE tre200dx END) AS DECIMAL(5,1))    "air_temp_max_celsius",
-		CAST((CASE WHEN ure200d0 = '-' THEN NULL ELSE ure200d0 END) AS DECIMAL(9,4))  	"humidity_avg_percent"
+		CAST((CASE WHEN CAST(gre000d0 AS VARCHAR) = '-' THEN NULL ELSE gre000d0 END) AS DECIMAL(9,4))       "radiation_daily_avg_wsqm",
+		CAST((CASE WHEN CAST(hto000d0 AS VARCHAR) = '-' THEN NULL ELSE hto000d0 END) AS DECIMAL(9,4))       "snow_cm",
+		CAST((CASE WHEN CAST(nto000d0 AS VARCHAR) = '-' THEN NULL ELSE nto000d0 END) AS DECIMAL(9,4))       "cloud_percent",
+		CAST((CASE WHEN CAST(prestad0 AS VARCHAR) = '-' THEN NULL ELSE prestad0 END) AS DECIMAL(5,1)) 	    "air_pressure_hpa",
+		CAST((CASE WHEN CAST(rre150d0 AS VARCHAR) = '-' THEN NULL ELSE rre150d0 END) AS DECIMAL(9,4)) 	    "rain_mm",
+		CAST((CASE WHEN CAST(sre000d0 AS VARCHAR) = '-' THEN NULL ELSE sre000d0 END) AS DECIMAL(9,4))       "sunshine_min",
+		CAST((CASE WHEN CAST(tre200d0 AS VARCHAR) = '-' THEN NULL ELSE tre200d0 END) AS DECIMAL(5,1))       "air_temp_avg_celsius",
+		CAST((CASE WHEN CAST(tre200dn AS VARCHAR) = '-' THEN NULL ELSE tre200dn END) AS DECIMAL(5,1))       "air_temp_min_celsius",
+		CAST((CASE WHEN CAST(tre200dx AS VARCHAR) = '-' THEN NULL ELSE tre200dx END) AS DECIMAL(5,1))       "air_temp_max_celsius",
+		CAST((CASE WHEN CAST(ure200d0 AS VARCHAR) = '-' THEN NULL ELSE ure200d0 END) AS DECIMAL(9,4))  	    "humidity_avg_percent"
 
 FROM	stage.t_weather_statistic
 WHERE  extract(year from to_date(date::text, 'YYYYMMDD'))  = extract(year from now())
@@ -42,7 +43,7 @@ WHERE NOT EXISTS (SELECT 1 FROM tmp_weather_statistic B
 ;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Delete step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Delete step done');
 
 -- *** UPDATE *** ---
 UPDATE dwh.t_weather_statistic A
@@ -74,7 +75,7 @@ WHERE B.statistic_id = A.statistic_id
           )
 ;
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Update step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Update step done');
 
 -- *** INSERT *** ---
 INSERT INTO dwh.t_weather_statistic
@@ -101,13 +102,13 @@ WHERE NOT EXISTS (SELECT 1 FROM dwh.t_weather_statistic B
 ;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Insert step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Insert step done');
 
 -- Drop temp table
 DROP TABLE tmp_weather_statistic;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Job end');
+CALL job.p_log (job_level, ip_job_id, 0, 'Job end');
 
 END;
 $BODY$;
