@@ -16,6 +16,7 @@ INSERT INTO dwh.t_canton
 SELECT	distinct SBB.kantonsnum
 , gdekt
 , gdektna
+
 , now()
 , now()
 , 'A'
@@ -89,6 +90,9 @@ stop_id INT PRIMARY KEY,
 municipality_id INT NOT NULL,
 stop_name VARCHAR(100),
 stop_type VARCHAR(50),
+dwh_create_date timestamp with time zone NOT NULL DEFAULT now(),
+dwh_change_date timestamp with time zone NOT NULL DEFAULT now(),
+dwh_status VARCHAR(1) NOT NULL,
 CONSTRAINT fk_municipality_id
     FOREIGN KEY(municipality_id)
         REFERENCES dwh.t_municipality(municipality_id)
@@ -99,7 +103,10 @@ INSERT INTO dwh.t_sbb_stop
 SELECT 	bpuic,
 		bfs_nummer,
 		bezeichnung_offiziell,
-		bpvh_verkehrsmittel_text_de
+		bpvh_verkehrsmittel_text_de,
+		now(),
+        now(),
+        'A'
 FROM 	stage.t_sbb_stop
 WHERE	is_haltestelle 	= '1'
 AND		bfs_nummer 		IS NOT NULL
