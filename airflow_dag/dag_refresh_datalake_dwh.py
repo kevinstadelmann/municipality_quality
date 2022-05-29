@@ -55,8 +55,8 @@ def main_function_dwh(airflow_connection_db, table_job_metadata):
         db_logger.write_log(job_level, row['job_id'], 0, 'Job start')
         try:
             db_logger.write_log(job_level, row['job_id'], 0, 'Load to dwh start')
-            load_to_db_dwh.upload_to_db_dwh(row['airflow_connection_db'], row['job_id'], row['proc_name'], row['db_schema'])
-            db_logger.write_log(job_level, row['job_id'], 0, 'Load to dwh end')
+            log_level, log_message = load_to_db_dwh.upload_to_db_dwh(row['airflow_connection_db'], row['job_id'], row['proc_name'], row['db_schema'])
+            db_logger.write_log(job_level, row['job_id'], log_level, log_message)
         except:
             db_logger.write_log(job_level, row['job_id'], 99, 'Load to dwh failed')
         db_logger.write_log(job_level, row['job_id'], 0, 'Job end')
@@ -100,6 +100,7 @@ load_data_dl = PythonOperator(
             'table_job_metadata': 'job.v_job_dl',
             'airflow_connection_db':'aws_rds_postgres_dataocean'
         } )
+
 
 load_data_dwh = PythonOperator(
         task_id='02_load_data_dwh',
