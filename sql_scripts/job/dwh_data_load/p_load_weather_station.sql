@@ -1,6 +1,6 @@
--- PROCEDURE: job.p_load_dwh_1(integer)
+-- PROCEDURE: job.p_load_dwh_weather_station(integer)
 
--- DROP PROCEDURE IF EXISTS job.p_load_dwh_1(integer);
+-- DROP PROCEDURE IF EXISTS job.p_load_dwh_weather_station(integer);
 
 CREATE OR REPLACE PROCEDURE job.p_load_dwh_weather_station(
 	IN ip_job_id integer)
@@ -96,5 +96,5 @@ $BODY$;
 
 
 
-ALTER PROCEDURE job.p_load_dwh_1(integer)
+ALTER PROCEDURE job.p_load_dwh_weather_station(integer)
     OWNER TO postgres;

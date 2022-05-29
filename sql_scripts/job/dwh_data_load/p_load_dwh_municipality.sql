@@ -1,6 +1,6 @@
--- PROCEDURE: job.p_load_dwh_1(integer)
+-- PROCEDURE: job.p_load_dwh_municipality(integer)
 
--- DROP PROCEDURE IF EXISTS job.p_load_dwh_1(integer);
+-- DROP PROCEDURE IF EXISTS job.p_load_dwh_municipality(integer);
 
 CREATE OR REPLACE PROCEDURE job.p_load_dwh_municipality(
 	IN ip_job_id integer)
@@ -93,7 +93,7 @@ $BODY$;
 
 
 
-ALTER PROCEDURE job.p_load_dwh_1(integer)
+ALTER PROCEDURE job.p_load_dwh_municipality(integer)
     OWNER TO postgres;
 
 

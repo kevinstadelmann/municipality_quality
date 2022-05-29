@@ -1,6 +1,6 @@
--- PROCEDURE: job.p_load_dwh_1(integer)
+-- PROCEDURE: job.p_load_dwh_municipality_statistic(integer)
 
--- DROP PROCEDURE IF EXISTS job.p_load_dwh_1(integer);
+-- DROP PROCEDURE IF EXISTS job.p_load_dwh_municipality_statistic(integer);
 
 CREATE OR REPLACE PROCEDURE job.p_load_dwh_municipality_statistic(
 	IN ip_job_id integer)
@@ -19,7 +19,7 @@ FROM	stage.t_municipality_statistic
 WHERE	gemeindecode IS NOT NULL
 AND		gemeindename IS NOT NULL
 AND		CAST(gemeindecode as INT) IN (SELECT municipality_id FROM dwh.t_municipality)
-) WITH DATA
+) WITH DATA;
 
 -- Update misbehaving columns: political parties
 UPDATE	tmp_municipality_statistic
@@ -34,7 +34,7 @@ SET		cvp			= CASE WHEN cvp = '*' 		THEN NULL 	ELSE cvp END,
 		gps			= CASE WHEN gps = '*' 		THEN  NULL	ELSE gps END,
 		kleine_rechtsparteien =
 					  CASE WHEN kleine_rechtsparteien = '*' THEN NULL ELSE kleine_rechtsparteien END
-
+;
 -- UPDATE misbehaving columns: working KPIs
 UPDATE 	tmp_municipality_statistic
 SET		"beschäftigte_total" 	= CASE WHEN "beschäftigte_total" = 'X' THEN NULL ELSE "beschäftigte_total" END,
@@ -46,7 +46,7 @@ SET		"beschäftigte_total" 	= CASE WHEN "beschäftigte_total" = 'X' THEN NULL EL
 		"im_2._sektor.1"		= CASE WHEN "im_2._sektor.1"	 = 'X' THEN NULL ELSE "im_2._sektor.1"	END,
 		"im_3._sektor.1"		= CASE WHEN "im_3._sektor.1"	 = 'X' THEN NULL ELSE "im_3._sektor.1"	END,
 		"sozialhilfequote"		= CASE WHEN "sozialhilfequote" 	 = 'X' THEN NULL ELSE "sozialhilfequote"	END
-
+;
 
 
 -- *** DELETE *** ---
@@ -210,7 +210,7 @@ CALL job.p_log (job_level, ip_job_id, 0, 'Job end');
 END;
 $BODY$;
 
-ALTER PROCEDURE job.p_load_dwh_1(integer)
+ALTER PROCEDURE job.p_load_dwh_municipality_statistic(integer)
     OWNER TO postgres;
 
 

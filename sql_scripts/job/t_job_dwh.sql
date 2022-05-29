@@ -27,5 +27,10 @@ ALTER TABLE IF EXISTS job.t_job_dwh
 
 INSERT INTO job.t_job_dwh(
 	job_id, job_name, job_active, run_order, airflow_connection_db, proc_name, db_schema)
-	VALUES (1, '01_load_weather_statistic', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_1', 'job'),
-	       (2, '02_load_sbb', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_sbb', 'job');
+	VALUES (1, '01_load_weather_station', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_weather_station', 'job'),
+	       (2, '02_load_weather_statistic', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_weather_statistic', 'job'),
+	       (3, '03_load_canton', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_canton', 'job'),
+	       (4, '04_load_district', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_district', 'job'),
+	       (5, '05_load_municipality', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_municipality', 'job'),
+	       (6, '06_load_municipality_statistic', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_municipality_statistic', 'job'),
+	       (7, '07_load_sbb', '1', 100, 'aws_rds_postgres_dataocean', 'p_load_dwh_sbb', 'job');

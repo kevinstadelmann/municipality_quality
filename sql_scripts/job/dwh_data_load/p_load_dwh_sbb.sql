@@ -1,13 +1,16 @@
 -- PROCEDURE: job.p_load_dwh_sbb(integer)
 
+-- DROP PROCEDURE IF EXISTS job.p_load_dwh_sbb(integer);
+
 CREATE OR REPLACE PROCEDURE job.p_load_dwh_sbb(
 	IN ip_job_id integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
+DECLARE job_level varchar := 'dwh';
 BEGIN
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Job start');
+CALL job.p_log (job_level, ip_job_id, 0, 'Job start');
 
 -- CREATE tmp Table
 CREATE TEMPORARY TABLE tmp_sbb_stop AS (
@@ -34,7 +37,7 @@ WHERE 	NOT EXISTS (SELECT 1 FROM tmp_sbb_stop B
 ;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Delete step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Delete step done');
 
 -- *** UPDATE *** ---
 UPDATE 	dwh.t_sbb_stop A
@@ -53,7 +56,7 @@ AND 	(A.stop_name 		!= B.bezeichnung_offiziell
         )
 ;
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Update step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Update step done');
 
 -- *** INSERT *** ---
 INSERT INTO dwh.t_sbb_stop
@@ -71,13 +74,13 @@ WHERE	NOT EXISTS (SELECT 	1
 ;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Insert step done');
+CALL job.p_log (job_level, ip_job_id, 0, 'Insert step done');
 
 -- Drop temp table
 DROP TABLE tmp_sbb_stop;
 
 -- Log
-CALL job.p_log (ip_job_id, 0, 'Job end');
+CALL job.p_log (job_level, ip_job_id, 0, 'Job end');
 
 END;
 $BODY$;
